@@ -30,9 +30,9 @@ func main() {
 	router := gin.Default()
 
 	router.GET("/products", func(c *gin.Context) {
-		var product Product
-		allProducts := db.Find(&product)
-		c.JSON(200, allProducts)
+		var product []Product
+		db.Find(&product)
+		c.JSON(200, product)
 	})
 
 	router.POST("/product", func(c *gin.Context) {
