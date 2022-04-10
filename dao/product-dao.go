@@ -1,4 +1,4 @@
-package repo
+package dao
 
 import (
 	"gin-api/entity"
@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type ProductRepo interface {
+type ProductDAO interface {
 	FindAll() []entity.Product
 }
 
@@ -14,7 +14,7 @@ type productConnection struct {
 	connection *gorm.DB
 }
 
-func NewBookRepository(dbConn *gorm.DB) ProductRepo {
+func NewProductDAO(dbConn *gorm.DB) ProductDAO {
 	return &productConnection{
 		connection: dbConn,
 	}

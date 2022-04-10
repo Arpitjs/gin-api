@@ -1,8 +1,8 @@
 package services
 
 import (
+	"gin-api/dao"
 	"gin-api/entity"
-	"gin-api/repo"
 )
 
 type ProductService interface {
@@ -10,15 +10,15 @@ type ProductService interface {
 }
 
 type productService struct {
-	productRepo repo.ProductRepo
+	productDAO dao.ProductDAO
 }
 
-func NewProductService(productRepo repo.ProductRepo) ProductService {
+func NewProductService(productDAO dao.ProductDAO) ProductService {
 	return &productService{
-		productRepo: productRepo,
+		productDAO: productDAO,
 	}
 }
 
 func (service *productService) FindAll() []entity.Product {
-	return service.productRepo.FindAll()
+	return service.productDAO.FindAll()
 }

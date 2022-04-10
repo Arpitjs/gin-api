@@ -2,7 +2,7 @@ package main
 
 import (
 	"gin-api/controller"
-	"gin-api/repo"
+	"gin-api/dao"
 	"gin-api/services"
 	"net/http"
 
@@ -29,8 +29,8 @@ func main() {
 	db.AutoMigrate(&Product{})
 
 	var (
-		productRepo       repo.ProductRepo             = repo.NewBookRepository(db)
-		productService    services.ProductService      = services.NewProductService(productRepo)
+		dao               dao.ProductDAO               = dao.NewProductDAO(db)
+		productService    services.ProductService      = services.NewProductService(dao)
 		productController controller.ProductController = controller.NewproductController(productService)
 	)
 
