@@ -1,6 +1,9 @@
 package main
 
 import (
+	"gin-api/controller"
+	"gin-api/repo"
+	"gin-api/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -25,15 +28,17 @@ func main() {
 
 	db.AutoMigrate(&Product{})
 
+	var (
+		productRepo       repo.ProductRepo             = repo.NewBookRepository(db)
+		productService    services.ProductService      = services.NewProductService(productRepo)
+		productController controller.ProductController = controller.NewproductController(productService)
+	)
+
 	//api routes
 
 	router := gin.Default()
 
-	router.GET("/products", func(c *gin.Context) {
-		var product []Product
-		db.Find(&product)
-		c.JSON(200, product)
-	})
+	router.GET("/products", productController.FindAll)
 
 	router.POST("/product", func(c *gin.Context) {
 		code := c.PostForm("Code")
