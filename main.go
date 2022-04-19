@@ -10,8 +10,23 @@ import (
 	"gorm.io/gorm"
 )
 
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Credentials", "true")
+		c.Header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Header("Access-Control-Allow-Methods", "POST,HEAD,PATCH, OPTIONS, GET, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+		c.Next()
+	}
+}
+
 func main() {
-	//db connection
 	var (
 		db                *gorm.DB                     = config.SetUpDB()
 		dao               dao.ProductDAO               = dao.NewProductDAO(db)
@@ -19,12 +34,12 @@ func main() {
 		productController controller.ProductController = controller.NewproductController(productService)
 	)
 
-	//api routes
 	router := gin.Default()
+	router.Use(CORSMiddleware())
 
 	router.GET("/products", productController.FindAll)
 
-	router.POST("/product", productController.Create)
+	router.POST("/products", productController.Create)
 
 	router.PUT("/product/:id", productController.Update)
 

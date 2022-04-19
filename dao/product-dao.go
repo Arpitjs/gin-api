@@ -9,7 +9,7 @@ import (
 type ProductDAO interface {
 	FindAll() []entity.Product
 	Create(body entity.Product) string
-	Update(id string, price string) string
+	Update(id string, body entity.Product) string
 	Delete(id string) string
 }
 
@@ -33,8 +33,8 @@ func (db *productConnection) Create(body entity.Product) string {
 	db.connection.Create(body)
 	return "product created!"
 }
-func (db *productConnection) Update(id string, price string) string {
-	db.connection.Where("id", id).Update("Price", price)
+func (db *productConnection) Update(id string, body entity.Product) string {
+	db.connection.Where("id", id).Updates(body)
 	return "product updated!"
 }
 func (db *productConnection) Delete(id string) string {

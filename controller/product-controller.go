@@ -18,6 +18,8 @@ type productController struct {
 	productService services.ProductService
 }
 
+type Map map[string]interface{}
+
 func NewproductController(productService services.ProductService) ProductController {
 	return &productController{
 		productService: productService,
@@ -36,16 +38,24 @@ func (p *productController) Create(context *gin.Context) {
 		context.JSON(400, "error creating product")
 	} else {
 		result := p.productService.Create(toCreate)
-		context.JSON(200, result)
+		m := Map{"info": result, "data": toCreate}
+		context.JSON(200, m)
 	}
 }
 
 func (p *productController) Update(context *gin.Context) {
 	id := context.Param("id")
-	price := context.PostForm("price")
-	result := p.productService.Update(id, price)
-	context.JSON(200, result)
+	var toUpdate entity.Product
+	err := context.BindJSON(&toUpdate)
+	if err != nil {
+		context.JSON(400, "error creating product")
+	} else {
+		result := p.productService.Update(id, toUpdate)
+		m := Map{"info": result, "data": toUpdate}
+		context.JSON(200, m)
+	}
 }
+
 func (p *productController) Delete(context *gin.Context) {
 	id := context.Param("id")
 	result := p.productService.Delete(id)

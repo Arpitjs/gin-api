@@ -8,7 +8,7 @@ import (
 type ProductService interface {
 	FindAll() []entity.Product
 	Create(body entity.Product) string
-	Update(id string, price string) string
+	Update(id string, body entity.Product) string
 	Delete(id string) string
 }
 
@@ -25,15 +25,15 @@ func NewProductService(productDAO dao.ProductDAO) ProductService {
 func (service *productService) FindAll() []entity.Product {
 	return service.productDAO.FindAll()
 }
+
 func (service *productService) Create(body entity.Product) string {
-	res := service.productDAO.Create(body)
-	return res
+	return service.productDAO.Create(body)
 }
-func (service *productService) Update(id string, price string) string {
-	res := service.productDAO.Update("price", price)
-	return res
+
+func (service *productService) Update(id string, body entity.Product) string {
+	return service.productDAO.Update(id, body)
 }
+
 func (service *productService) Delete(id string) string {
-	res := service.productDAO.Delete(id)
-	return res
+	return service.productDAO.Delete(id)
 }
