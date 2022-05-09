@@ -26,16 +26,36 @@ func NewproductController(productService services.ProductService) ProductControl
 	}
 }
 
+// GetProducts godoc
+// @Summary List existing products
+// @Description Get all the existing products
+// @Tags code, price
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} entity.Product
+// @Failure 400 {string} "not found"
+// @Router /products [get]
 func (p *productController) FindAll(context *gin.Context) {
 	var products []entity.Product = p.productService.FindAll()
 	context.JSON(200, products)
 }
 
+// CreateProduct godoc
+// @Summary Create new products
+// @Description Create a new product
+// @Tags code, price
+// @Accept  json
+// @Produce  json
+// @Param product body entity.Product true "Create product"
+// @Success 200 {string} "created product successfully..."
+// @Failure 400 {string} "error creating product"
+// @Router /products [post]
 func (p *productController) Create(context *gin.Context) {
 	var toCreate entity.Product
 	err := context.BindJSON(&toCreate)
 	if err != nil {
 		context.JSON(400, "error creating product")
+		return
 	} else {
 		result := p.productService.Create(toCreate)
 		m := Map{"info": result, "data": toCreate}

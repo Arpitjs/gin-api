@@ -4,12 +4,16 @@ import (
 	"gin-api/config"
 	"gin-api/controller"
 	"gin-api/dao"
+
 	"gin-api/services"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-)
 
+	swaggerFiles "github.com/swaggo/files"     // swagger embed files
+	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
+)
+//
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
@@ -26,7 +30,22 @@ func CORSMiddleware() gin.HandlerFunc {
 	}
 }
 
+// @title Swagger  demo service API
+// @version 1.0
+// @description This is demo server.
+// @termsOfService demo.com
+
+// @contact.name API Support
+// @contact.url http://demo.com/support
+
+// @host localhost:8091
+// @BasePath /api/v1
+
+// @in header
+// @name Authorization
+
 func main() {
+
 	var (
 		db                *gorm.DB                     = config.SetUpDB()
 		dao               dao.ProductDAO               = dao.NewProductDAO(db)
@@ -44,6 +63,8 @@ func main() {
 	router.PUT("/product/:id", productController.Update)
 
 	router.DELETE("/product/:id", productController.Delete)
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	router.Run()
 }
